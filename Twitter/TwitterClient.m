@@ -19,6 +19,8 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
 @property(nonatomic, strong) void (^getTweetsCompletion)(NSArray *tweets, NSError *error);
 @property(nonatomic, strong) void (^createTweetsCompletion)(NSDictionary *tweet, NSError *error);
 @property(nonatomic, strong) void (^reTweetCompletion)(NSDictionary *tweet, NSError *error);
+@property(nonatomic, strong) void (^favoriteCompletion)(NSDictionary *tweet, NSError *error);
+@property(nonatomic, strong) void (^unFavoriteCompletion)(NSDictionary *tweet, NSError *error);
 
 @end
 
@@ -111,6 +113,30 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Failed retweet: %@", error);
         self.reTweetCompletion(nil, error);
+    }];
+}
+
+- (void)favoriteTweet:(NSString *)tweetId completion:(void (^)(NSDictionary *tweet, NSError *error))completion {
+    self.favoriteCompletion = completion;
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"id": tweetId}];
+    [self POST:@"1.1/favorites/create.json" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary *tweet = [[NSDictionary alloc] initWithDictionary:responseObject];
+        self.favoriteCompletion(tweet, nil);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Failed");
+        self.favoriteCompletion(nil, error);
+    }];
+}
+
+- (void)unfavoriteTweet:(NSString *)tweetId completion:(void (^)(NSDictionary *tweet, NSError *error))completion {
+    self.unFavoriteCompletion = completion;
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"id": tweetId}];
+    [self POST:@"1.1/favorites/destroy.json" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary *tweet = [[NSDictionary alloc] initWithDictionary:responseObject];
+        self.unFavoriteCompletion(tweet, nil);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Failed");
+        self.unFavoriteCompletion(nil, error);
     }];
 }
 

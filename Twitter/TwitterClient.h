@@ -19,5 +19,7 @@
 - (void) getTweets:(void (^)(NSArray *tweets, NSError *error))completion;
 - (void) createTweet:(NSString *)status completion:(void (^)(NSDictionary *tweet, NSError *error))completion;
 - (void) reTweet:(NSString *)tweetId completion:(void(^)(NSDictionary *tweet, NSError *error))completion;
+- (void) favoriteTweet:(NSString *)tweetId completion:(void (^)(NSDictionary *tweet, NSError *error))completion;
+    - (void) unfavoriteTweet:(NSString *)tweetId completion:(void (^)(NSDictionary *tweet, NSError *error))completion;
     
 @end

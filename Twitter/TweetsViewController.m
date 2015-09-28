@@ -142,7 +142,11 @@
     
 }
 
-- (IBAction)onRetweet:(UITapGestureRecognizer *)sender {
+- (IBAction)onFavorite:(UITapGestureRecognizer *)sender {
+
+}
+
+- (IBAction)onRetweet:(UIButton *)sender {
     [[TwitterClient sharedInstance] createTweet:self.tweetId completion:^(NSDictionary *tweet, NSError *error) {
         if(tweet != nil) {
             [self onRefresh];
@@ -150,10 +154,6 @@
             //error
         }
     }];
-}
-
-- (IBAction)onFavorite:(UITapGestureRecognizer *)sender {
-
 }
 
 
